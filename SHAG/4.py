@@ -56,25 +56,27 @@
 #
 # hw = Hello_World()
 
-class Grandparent:
-    def about(self):
-        print("I am GrandParent")
+# class Grandparent:
+#     def about(self):
+#         print("I am GrandParent")
 
-    def about_myself(self):
-        print("I am Grandparent")
-
-
-class Parent(Grandparent):
-    def about_myself(self):
-        print("I am Parent")
+#     def about_myself(self):
+#         print("I am Grandparent")
 
 
-class Child(Parent):
-    def __init__(self):
-        super().about()
-        super().about_myself()
+# class Parent(Grandparent):
+#     def about_myself(self):
+#         print("I am Parent")
 
-c = Child()
+
+# class Child(Parent):
+#     def __init__(self):
+#         super().about()
+#         super().about_myself()
+
+# c = Child()
+
+import random
 
 class Computer:
     def __init__(self, model, *args, **kwargs):
@@ -91,10 +93,17 @@ class SmartPhone(Display, Computer):
     def info(self):
         print(self.model)
         print(self.resolution)
-        print(self.memomory)
+        print(self.memory)
 
+class Cipher:
+    def __init__(self, num):
+        self.num = num + random.randint(1, 1000) * 23
 
+    def __str__(self):
+        return str(self.num)
 
-iphone = SmartPhone(model = IPhone 25 Pro max super puper ultra 60HZ )
+Cipher = (1)
+print("password for your IPhone =", Cipher)
+
+iphone = SmartPhone(model = "IPhone 25 Pro max super puper ultra 60HZ")
 iphone.info()
-

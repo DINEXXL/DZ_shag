@@ -42,15 +42,15 @@ class Human:
         pass
 
     def is_alive(self):
-        is self.gladness < 0:
+        if self.gladness<0:
             print('Depression')
             return False
-    if self.food , 0:
-        print('Dead...')
-        return False
-    if self.money < -500:
-        print('Bankrupt...')
-        return False
+        if self.food<0:
+            print('Dead...')
+            return False
+        if self.money<-500:
+            print('Bankrupt...')
+            return False
 
     def live(self):
         pass
@@ -88,7 +88,7 @@ class Job:
 job_list = {}
 brands_of_car = {}
 
-nick = Human(nama='nick')
-for day in range(1, 8)
+nick = Human(name='Nick')
+for day in range(1, 8):
     if nick.live(day) == False:
         break
