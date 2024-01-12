@@ -3,7 +3,6 @@ import random
 
 class Human:
     def __init__(self, name="Human", job=None, home=None, car=None):
-        self.current_day = 0 
         self.name = name
         self.money = 100
         self.gladness = 50
@@ -12,16 +11,6 @@ class Human:
         self.car = car
         self.home = home
         self.pet = None
-
-    def __iter__(self):
-        self.current_day = 1
-        return self
-
-    def __next__(self):
-        if self.live(self.current_day) == False:
-            raise StopIteration
-        self.current_day += 1
-        return self.current_day - 1
 
     def get_home(self):
         self.home = House()
@@ -48,13 +37,14 @@ class Human:
             self.pet.gladness += 10
         else:
             print("I don't have a pet")
-
+            
     def walk_with_pet(self):
         if self.pet is None:
             self.get_pet()
-        print("Walking with my dog.")
+        print("Walking with my dog.") 
         self.gladness += 5
         self.pet.gladness += 10
+            
 
     def eat(self):
         if self.home.food <= 0:
@@ -245,5 +235,6 @@ brands_of_car = {
     "Ferrari": {"fuel": 80, "strength": 120, "consumption": 14},
 }
 nick = Human(name="Nick")
-for day in nick:
-    print(f"Day {day} passed")
+for day in range(1, 8):
+    if nick.live(day) == False:
+        break
