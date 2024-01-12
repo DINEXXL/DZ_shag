@@ -1,5 +1,13 @@
 import random
+import logging
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+handler = logging.FileHandler('simulation.log')
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 class Human:
     def __init__(self, name="Human", job=None, home=None, car=None):
@@ -11,6 +19,8 @@ class Human:
         self.car = car
         self.home = home
         self.pet = None
+        self.day = 0
+
 
     def get_home(self):
         self.home = House()
@@ -122,6 +132,11 @@ class Human:
         print(f"Fuel – {self.car.fuel}")
         print(f"Strength – {self.car.strength}")
 
+        logger.info(f"Day {day} status:")
+        logger.info(f"- Money: {self.money}") 
+        logger.info(f"- Satiety: {self.satiety}")
+        logger.info(f"- Gladness: {self.gladness}")
+
     def is_alive(self):
         if self.gladness < 0:
             print("Depression...")
@@ -181,7 +196,6 @@ class Human:
             print("Time for treats!")
             self.shopping(manage="delicacies")
 
-
 class Auto:
     def __init__(self, brand_list):
         self.brand = random.choice(list(brand_list))
@@ -234,7 +248,10 @@ brands_of_car = {
     "Volvo": {"fuel": 70, "strength": 150, "consumption": 8},
     "Ferrari": {"fuel": 80, "strength": 120, "consumption": 14},
 }
-nick = Human(name="Nick")
+nick = Human() 
 for day in range(1, 8):
-    if nick.live(day) == False:
+    if nick.live(day) == False: 
         break
+        
+logger.info(f"Simulating day {day}")
+logger.info("Simulation ended")
