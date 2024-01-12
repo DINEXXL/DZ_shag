@@ -3,17 +3,31 @@ import random
 class Student:
 
     def __init__(self, name):
-        self.name = name
+        self.name = name  
         self.progress = 0
         self.gladness = 0
         self.money = 0
         self.alive = True
+        self.day = 0
+
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        self.day += 1
+        self.live(self.day)  
+        if not self.alive:
+            raise StopIteration
+        return self
 
     def study(self):
         print('time to lear smth new')
         self.progress += 0.12
         self.gladness += 5
         self.money += 10
+        
+        def live(self, day):
+            print(f"Day {day} of {self.name}'s life")
 
     def sleep(self):
         print("Time to sleep")
@@ -58,8 +72,6 @@ class Student:
         self.end_of_day()
         self.is_alive()
 
-nick = Student(name='Nick')
-for day in range(365):
-    if not nick.alive:
-        break
-    nick.live(day)
+nick = Student('Nick')
+for day in nick:
+   print(day)
