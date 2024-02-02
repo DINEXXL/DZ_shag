@@ -1,6 +1,6 @@
+from tkinter import messagebox
 import sqlite3
 from tkinter import *
-from tkinter import messagebox
 
 def connect_db():
     conn = sqlite3.connect('users.db')
