@@ -1,70 +1,66 @@
-import requests
-from bs4 import BeautifulSoup
 import sqlite3
+from tkinter import *
+from tkinter import messagebox
 
-class DatabaseManager:
-    def __init__(self, db_name):
-        self.conn = sqlite3.connect(db_name)
-        self.cursor = self.conn.cursor()
+def connect_db():
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            username TEXT PRIMARY KEY,
+            password TEXT NOT NULL);
+    ''')
+    return conn, cursor
 
-    def create_table(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS websites
-                     (url text, content text)''')
+def register(conn, cursor, username, password):
+    try:
+        cursor.execute('''
+            INSERT INTO users (username, password) VALUES (?, ?);
+        ''', (username, password))
+        conn.commit()
+        messagebox.showinfo("Реєстрація", "Реєстрація пройшла успішно")
+    except sqlite3.IntegrityError:
+        messagebox.showerror("Помилка", "Користувач з таким ім'ям вже існує")
 
-    def insert_website(self, url, content):
-        self.cursor.execute("INSERT INTO websites VALUES (?,?)", (url, content))
-        self.conn.commit()
+def login(cursor, username, password):
+    cursor.execute('''
+        SELECT * FROM users WHERE username = ? AND password = ?;
+    ''', (username, password))
+    data = cursor.fetchone()
+    if data:
+        messagebox.showinfo("Вхід", "Вхід виконано успішно")
+    else:
+        messagebox.showerror("Помилка", "Неправильне ім'я користувача або пароль")
 
-    def search(self, query):
-        self.cursor.execute("SELECT url, content FROM websites")
-        rows = self.cursor.fetchall()
-        results = []
-        for row in rows:
-            if query in row[1]:
-                results.append((row[0], row[1].count(query)))
-        results.sort(key=lambda x: x[1], reverse=True)
-        return results
+def main():
+    conn, cursor = connect_db()
 
-class WebScraper:
-    def __init__(self):
-        pass
+    window = Tk()
+    window.title("Реєстрація та вхід")
 
-    def scrape(self, url):
-        response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        return soup.get_text()
+    username_label = Label(window, text="Ім'я користувача")
+    username_label.pack()
+    username_entry = Entry(window)
+    username_entry.pack()
 
-class UserInterface:
-    def __init__(self, db_manager, web_scraper):
-        self.db_manager = db_manager
-        self.web_scraper = web_scraper
+    password_label = Label(window, text="Пароль")
+    password_label.pack()
+    password_entry = Entry(window, show="*")
+    password_entry.pack()
 
-    def add_website(self, url):
-        content = self.web_scraper.scrape(url)
-        self.db_manager.insert_website(url, content)
+    def do_register():
+        register(conn, cursor, username_entry.get(), password_entry.get())
 
-    def search(self, query):
-        return self.db_manager.search(query)
+    def do_login():
+        login(cursor, username_entry.get(), password_entry.get())
 
-def run():
-    db_manager = DatabaseManager('websites.db')
-    web_scraper = WebScraper()
-    ui = UserInterface(db_manager, web_scraper)
+    register_button = Button(window, text="Реєстрація", command=do_register)
+    register_button.pack()
 
-    db_manager.create_table()
+    login_button = Button(window, text="Вхід", command=do_login)
+    login_button.pack()
 
-    while True:
-        print("1. Add website")
-        print("2. Search")
-        choice = input("Enter your choice: ")
-        if choice == '1':
-            url = input("Enter the URL of the website: ")
-            ui.add_website(url)
-        elif choice == '2':
-            query = input("Enter the search query: ")
-            results = ui.search(query)
-            for result in results:
-                print(f"Website: {result[0]}, Frequency: {result[1]}")
+    window.mainloop()
 
-if __name__ == "__main__":
-    run()
+if __name__ == '__main__':
+    main()
