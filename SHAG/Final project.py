@@ -18,9 +18,9 @@ def register(conn, cursor, username, password):
             INSERT INTO users (username, password) VALUES (?, ?);
         ''', (username, password))
         conn.commit()
-        messagebox.showinfo("Реєстрація", "Реєстрація пройшла успішно")
+        messagebox.showinfo("Registration", "Registration was successful")
     except sqlite3.IntegrityError:
-        messagebox.showerror("Помилка", "Користувач з таким ім'ям вже існує")
+        messagebox.showerror("Error", "User with this name already exists")
 
 def login(cursor, username, password):
     cursor.execute('''
@@ -28,22 +28,22 @@ def login(cursor, username, password):
     ''', (username, password))
     data = cursor.fetchone()
     if data:
-        messagebox.showinfo("Вхід", "Вхід виконано успішно")
+        messagebox.showinfo("Login", "Login successful")
     else:
-        messagebox.showerror("Помилка", "Неправильне ім'я користувача або пароль")
+        messagebox.showerror("Error", "Invalid username or password")
 
 def main():
     conn, cursor = connect_db()
 
     window = Tk()
-    window.title("Реєстрація та вхід")
+    window.title("Registration and login")
 
-    username_label = Label(window, text="Ім'я користувача")
+    username_label = Label(window, text="Username")
     username_label.pack()
     username_entry = Entry(window)
     username_entry.pack()
 
-    password_label = Label(window, text="Пароль")
+    password_label = Label(window, text="Password.")
     password_label.pack()
     password_entry = Entry(window, show="*")
     password_entry.pack()
@@ -54,10 +54,10 @@ def main():
     def do_login():
         login(cursor, username_entry.get(), password_entry.get())
 
-    register_button = Button(window, text="Реєстрація", command=do_register)
+    register_button = Button(window, text="Registration", command=do_register)
     register_button.pack()
 
-    login_button = Button(window, text="Вхід", command=do_login)
+    login_button = Button(window, text="Login", command=do_login)
     login_button.pack()
 
     window.mainloop()
